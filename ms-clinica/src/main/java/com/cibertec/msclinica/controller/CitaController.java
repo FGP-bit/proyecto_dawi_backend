@@ -1,7 +1,11 @@
 package com.cibertec.msclinica.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +16,7 @@ import com.cibertec.msclinica.service.CitaService;
 
 @RestController
 @RequestMapping("/api/citas")
+@CrossOrigin(origins = "http://localhost:4200") 
 public class CitaController {
 
 	@Autowired
@@ -26,4 +31,13 @@ public class CitaController {
 		}
 	}
 	
+	@GetMapping
+	public ResponseEntity<List<CitaDTO>> listarCitas(){
+		try {
+			List<CitaDTO> lista = service.listarCitas();
+			return ResponseEntity.ok(lista);
+		} catch (Exception e) {
+			return ResponseEntity.noContent().build();
+		}
+	}
 }

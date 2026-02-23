@@ -3,7 +3,7 @@ package com.cibertec.gestionmedica.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-@Data
+
 @Entity
 @Table(name = "medico")
 public class Medico {
@@ -14,8 +14,15 @@ public class Medico {
     @Column(nullable = false, length = 100)
     private String nombre;
 
+    @Column(length = 100)
+    private String apellido;
+
+
     @Column(nullable = false, length = 100)
     private String especialidad;
+    
+    @Column(length = 20)
+    private String telefono;
 
     @OneToOne(optional = true) 
     @JoinColumn(name = "usuario_id", unique = true, nullable = true) 
@@ -55,6 +62,22 @@ public class Medico {
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
+	}
+
+	public String getApellido() {
+		return apellido;
+	}
+
+	public void setApellido(String apellido) {
+		this.apellido = apellido;
+	}
+
+	public String getTelefono() {
+		return telefono;
+	}
+
+	public void setTelefono(String telefono) {
+		this.telefono = telefono;
 	}
     
     

@@ -7,5 +7,6 @@ import com.cibertec.gestionmedica.entity.Medico;
 
 @Repository
 public interface MedicoRepository extends JpaRepository<Medico, Long> {
+	
 
 }
