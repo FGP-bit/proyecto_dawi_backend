@@ -34,10 +34,10 @@ public class PdfService {
 	@Autowired
 	private CitaRepository citaRepository;
 
-	private static final Color COLOR_PRIMARIO = new Color(0, 102, 204); // Azul corporativo
-	private static final Color COLOR_FONDO_HEADER = new Color(230, 240, 255); // Azul muy claro
-	private static final Color COLOR_ALTERNADO = new Color(245, 245, 245); // Gris claro para filas
 
+	private static final Color COLOR_PRIMARIO = new Color(13, 53, 130); 
+	private static final Color COLOR_FONDO_HEADER = new Color(240, 244, 248); 
+	private static final Color COLOR_ALTERNADO = new Color(245, 245, 245); 
 
 	private static final Font FONT_TITULO_CLINICA = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16, COLOR_PRIMARIO);
 	private static final Font FONT_INFO_CLINICA = FontFactory.getFont(FontFactory.HELVETICA, 10, Color.DARK_GRAY);
@@ -53,11 +53,9 @@ public class PdfService {
 			PdfWriter writer = PdfWriter.getInstance(document, out);
 			document.open();
 
-			
 			agregarCabeceraClinica(document);
 			document.add(Chunk.NEWLINE);
 			document.add(Chunk.NEWLINE);
-
 
 			Paragraph tituloReporte = new Paragraph("Reporte Detallado de Citas Médicas", FONT_TITULO_REPORTE);
 			tituloReporte.setAlignment(Element.ALIGN_CENTER);
@@ -70,13 +68,12 @@ public class PdfService {
 			
 			document.add(Chunk.NEWLINE);
 
-		
 			PdfPTable table = crearTablaCitas();
 			document.add(table);
 
-		
 			document.add(Chunk.NEWLINE);
-			Paragraph footer = new Paragraph("Este documento es un reporte confidencial de la Clínica Santa Lucía. Documento generado electrónicamente.", FONT_INFO_CLINICA);
+			
+			Paragraph footer = new Paragraph("Este documento es un reporte confidencial de la Clínica Medical Care. Documento generado electrónicamente.", FONT_INFO_CLINICA);
 			footer.setAlignment(Element.ALIGN_CENTER);
 			document.add(footer);
 			
@@ -89,31 +86,25 @@ public class PdfService {
 		return new ByteArrayInputStream(out.toByteArray());
 	}
 
-
-
 	private void agregarCabeceraClinica(Document document) throws DocumentException, IOException {
 
 		PdfPTable headerTable = new PdfPTable(2);
 		headerTable.setWidthPercentage(100);
 		headerTable.setWidths(new int[] { 1, 3 }); 
 
-
 		PdfPCell cellLogo = new PdfPCell();
 		cellLogo.setBorder(PdfPCell.NO_BORDER);
 		cellLogo.setVerticalAlignment(Element.ALIGN_MIDDLE);
 		try {
-			
 			ClassPathResource imgFile = new ClassPathResource("static/images/logo-clinica.png");
 			Image img = Image.getInstance(imgFile.getURL());
 			img.scaleToFit(120, 80); 
 			cellLogo.addElement(img);
 		} catch (Exception e) {
-			
 			cellLogo.addElement(new Paragraph("CLÍNICA MEDICAL CARE", FONT_TITULO_CLINICA));
 		}
 		headerTable.addCell(cellLogo);
 
-		
 		PdfPCell cellInfo = new PdfPCell();
 		cellInfo.setBorder(PdfPCell.NO_BORDER);
 		cellInfo.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -128,9 +119,7 @@ public class PdfService {
 		cellInfo.addElement(pDireccion);
 
 		headerTable.addCell(cellInfo);
-
 		document.add(headerTable);
-		
 		
 		PdfPTable separator = new PdfPTable(1);
 		separator.setWidthPercentage(100);
@@ -146,9 +135,8 @@ public class PdfService {
 		PdfPTable table = new PdfPTable(5); 
 		table.setWidthPercentage(100);
 		table.setSpacingBefore(10f);
-		table.setWidths(new float[] { 0.8f, 2f, 2.5f, 2.5f, 1.5f }); 
+		table.setWidths(new float[] { 0.8f, 2f, 3.5f, 2f, 1.5f }); 
 
-		
 		String[] headers = { "ID", "Fecha/Hora", "Paciente", "Médico", "Estado" };
 		for (String header : headers) {
 			PdfPCell hCell = new PdfPCell(new Phrase(header.toUpperCase(), FONT_HEADER_TABLA));
@@ -160,15 +148,20 @@ public class PdfService {
 			table.addCell(hCell);
 		}
 
-		
 		List<Cita> citas = citaRepository.findAll();
 		boolean alternate = false; 
 
 		for (Cita cita : citas) {
 			addDatoCell(table, cita.getId().toString(), alternate);
 			addDatoCell(table, cita.getFecha() + "\n" + cita.getHora(), alternate);
-			addDatoCell(table, cita.getPaciente().getNombre(), alternate);
-			addDatoCell(table, cita.getMedico().getNombre(), alternate);
+			
+			String nombreCompletoPaciente = cita.getPaciente().getApellidoPaterno() + " " + 
+											cita.getPaciente().getApellidoMaterno() + ", " + 
+											cita.getPaciente().getNombres();
+			addDatoCell(table, nombreCompletoPaciente, alternate);
+			
+			addDatoCell(table, "Dr. " + cita.getMedico().getNombre(), alternate);
+			
 			addDatoCell(table, cita.getEstado(), alternate);
 			
 			alternate = !alternate; 
@@ -177,7 +170,6 @@ public class PdfService {
 		return table;
 	}
 
-	
 	private void addDatoCell(PdfPTable table, String text, boolean alternate) {
 		PdfPCell cell = new PdfPCell(new Phrase(text != null ? text : "", FONT_CELDA_TABLA));
 		cell.setPadding(6f);
@@ -186,8 +178,7 @@ public class PdfService {
 			cell.setBackgroundColor(COLOR_ALTERNADO); 
 		}
 		
-		
-		if(text.length() < 5 || text.equals("PENDIENTE") || text.equals("ATENDIDO")) {
+		if(text.length() < 5 || text.equals("PENDIENTE") || text.equals("ATENDIDO") || text.equals("CANCELADA")) {
 			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
 		}
 		table.addCell(cell);

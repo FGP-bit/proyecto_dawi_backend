@@ -47,4 +47,18 @@ public class CitaService {
 				.map(mapper::toDTO)
 				.collect(Collectors.toList());
 	}
+	
+	public void eliminarCita(Long id) {
+        if(repository.existsById(id)) {
+            repository.deleteById(id);
+        }
+    }
+    
+    public CitaDTO cambiarEstado(Long id, String nuevoEstado) {
+        Cita cita = repository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Cita no encontrada"));
+        
+        cita.setEstado(nuevoEstado);
+        return mapper.toDTO(repository.save(cita));
+    }
 }

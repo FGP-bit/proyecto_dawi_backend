@@ -21,6 +21,12 @@ public class CitaMapper {
         dto.setTarifaAplicada(entity.getTarifaAplicada());
         dto.setPacienteId(entity.getPaciente().getId());
         dto.setMedicoId(entity.getMedico().getId());
+        if(entity.getPaciente() != null) {
+        	dto.setPacienteNombre(entity.getPaciente().getNombres() + " " + entity.getPaciente().getApellidoPaterno());
+        }
+        if(entity.getMedico() != null) {
+            dto.setMedicoNombre("Dr. " + entity.getMedico().getNombre());
+        }
         return dto;
     }
 	
@@ -35,7 +41,6 @@ public class CitaMapper {
 		entity.setMotivo(dto.getMotivo());
 		entity.setTarifaAplicada(dto.getTarifaAplicada());
 		
-		//dummy
 		
 		Paciente p = new Paciente(); p.setId(dto.getPacienteId());
 		entity.setPaciente(p);

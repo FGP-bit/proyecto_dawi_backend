@@ -12,8 +12,11 @@ public class CitaDTO {
     private LocalTime hora;
     private String motivo;
     private BigDecimal tarifaAplicada;
-    private Long pacienteId; // Solo el ID
-    private Long medicoId;   // Solo el ID
+    private Long pacienteId;
+    private Long medicoId; 
+    
+    private String pacienteNombre;
+    private String medicoNombre;
     
     public CitaDTO() {
 		// TODO Auto-generated constructor stub
@@ -82,7 +85,24 @@ public class CitaDTO {
 	public void setMedicoId(Long medicoId) {
 		this.medicoId = medicoId;
 	}
+
+	public String getPacienteNombre() {
+		return pacienteNombre;
+	}
+
+	public void setPacienteNombre(String pacienteNombre) {
+		this.pacienteNombre = pacienteNombre;
+	}
+
+	public String getMedicoNombre() {
+		return medicoNombre;
+	}
+
+	public void setMedicoNombre(String medicoNombre) {
+		this.medicoNombre = medicoNombre;
+	}
     
+	
     
 	
 }
