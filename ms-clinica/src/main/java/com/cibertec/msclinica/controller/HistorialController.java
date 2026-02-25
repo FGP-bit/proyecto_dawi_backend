@@ -21,18 +21,15 @@ public class HistorialController {
     @Autowired
     private HistorialService service;
 
-    // Registrar una nueva entrada en el historial
     @PostMapping
     public ResponseEntity<EntradaHistorialDTO> registrar(@RequestBody EntradaHistorialDTO dto) {
         try {
             return ResponseEntity.ok(service.registrarEntrada(dto));
         } catch (Exception e) {
-            // En un caso real, manejarías mejor las excepciones, pero para el proyecto sirve
             return ResponseEntity.badRequest().build(); 
         }
     }
 
-    // Listar todo el historial de un paciente específico
     @GetMapping("/paciente/{pacienteId}")
     public ResponseEntity<List<EntradaHistorialDTO>> listarPorPaciente(@PathVariable Long pacienteId) {
         return ResponseEntity.ok(service.listarPorPaciente(pacienteId));

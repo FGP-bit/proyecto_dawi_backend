@@ -1,18 +1,15 @@
-package com.cibertec.msclinica;
+package com.cibertec.mshistorial;
 
 import org.springframework.boot.SpringApplication;
-
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @SpringBootApplication
-@EnableDiscoveryClient
 @EntityScan(basePackages = {"com.cibertec.gestionmedica.entity"})
-public class MsClinicaApplication {
+public class MsHistorialApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MsClinicaApplication.class, args);
+		SpringApplication.run(MsHistorialApplication.class, args);
 	}
 
 }

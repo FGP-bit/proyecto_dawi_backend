@@ -19,7 +19,6 @@ import com.cibertec.msclinica.service.CitaService;
 
 @RestController
 @RequestMapping("/api/citas")
-@CrossOrigin(origins = "http://localhost:4200") 
 public class CitaController {
 
 	@Autowired

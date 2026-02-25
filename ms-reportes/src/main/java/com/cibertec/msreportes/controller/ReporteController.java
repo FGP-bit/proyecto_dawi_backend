@@ -17,7 +17,6 @@ import com.cibertec.msreportes.service.PdfService;
 
 @RestController
 @RequestMapping("/api/reportes")
-@CrossOrigin(origins = "http://localhost:4200")
 
 public class ReporteController {
 

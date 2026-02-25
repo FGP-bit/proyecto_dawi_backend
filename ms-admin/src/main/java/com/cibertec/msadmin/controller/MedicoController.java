@@ -18,7 +18,6 @@ import com.cibertec.msadmin.service.MedicoService;
 
 @RestController
 @RequestMapping("/api/medicos")
-@CrossOrigin(origins = "http://localhost:4200")
 public class MedicoController {
 
 	@Autowired

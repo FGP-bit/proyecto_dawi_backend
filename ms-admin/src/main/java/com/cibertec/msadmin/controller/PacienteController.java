@@ -19,7 +19,6 @@ import com.cibertec.msadmin.service.PacienteService;
 
 @RestController
 @RequestMapping("/api/pacientes")
-@CrossOrigin(origins = "http://localhost:4200")
 public class PacienteController {
 
 	@Autowired
