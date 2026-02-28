@@ -11,7 +11,7 @@
 	<groupId>com.cibertec</groupId>
 	<artifactId>ms-admin</artifactId>
 	<version>1.0.0</version>
-	<name>ms-admin</name>
+	<name>ms-admin</name>	
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
