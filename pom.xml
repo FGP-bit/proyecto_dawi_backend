@@ -1,0 +1,54 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+ http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+<modelVersion>4.0.0</modelVersion>
+
+<groupId>com.cibertec</groupId>
+<artifactId>gestion-medica-parent</artifactId>
+<version>1.0.0</version>
+<packaging>pom</packaging>
+
+<!-- ⭐ AHORA SPRING BOOT ES EL PADRE GLOBAL -->
+<parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>3.5.10</version>
+</parent>
+
+<properties>
+    <java.version>17</java.version>
+    <spring-cloud.version>2025.0.1</spring-cloud.version>
+</properties>
+
+<!-- ⭐ VERSIONES CENTRALIZADAS -->
+<dependencyManagement>
+    <dependencies>
+
+        <!-- SPRING CLOUD BOM -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-dependencies</artifactId>
+            <version>${spring-cloud.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+
+    </dependencies>
+</dependencyManagement>
+
+<modules>
+    <module>gestion-medica-entity</module>
+    <module>config-server</module>
+    <module>eureka-server</module>
+    <module>api-gateway</module>
+    <module>ms-admin</module>
+    <module>ms-auth</module>
+    <module>ms-clinica</module>
+    <module>ms-historial</module>
+    <module>ms-reportes</module>
+    <module>ms-notificacion</module>
+</modules>
+
+</project>
