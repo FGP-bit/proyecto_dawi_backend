@@ -48,6 +48,7 @@
     <module>ms-clinica</module>
     <module>ms-historial</module>
     <module>ms-reportes</module>
+    <module>ms-notificacion</module>
 </modules>
 
 </project>
