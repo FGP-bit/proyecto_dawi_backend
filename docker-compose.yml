@@ -1,5 +1,8 @@
 services:
 
+  # =========================
+  # MYSQL
+  # =========================
   mysql:
     image: mysql:8
     container_name: mysql
@@ -8,9 +11,18 @@ services:
       MYSQL_DATABASE: gestion_medica
     ports:
       - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pmysql"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
     networks:
       - dawi-network
 
+
+  # =========================
+  # RABBITMQ
+  # =========================
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
@@ -20,76 +32,147 @@ services:
     networks:
       - dawi-network
 
+
+  # =========================
+  # CONFIG SERVER
+  # =========================
   config-server:
     build:
       context: .
       dockerfile: config-server/Dockerfile
+    container_name: config-server
     ports:
       - "8888:8888"
+    volumes:
+      - ./config-repo:/config-repo
+    depends_on:
+      mysql:
+        condition: service_healthy
     networks:
       - dawi-network
 
+
+  # =========================
+  # EUREKA
+  # =========================
   eureka-server:
     build:
       context: .
       dockerfile: eureka-server/Dockerfile
+    container_name: eureka-server
     ports:
       - "8761:8761"
+    depends_on:
+      - config-server
     networks:
       - dawi-network
 
-  api-gateway:
-    build:
-      context: .
-      dockerfile: api-gateway/Dockerfile
-    ports:
-      - "8080:8080"
-    networks:
-      - dawi-network
 
+  # =========================
+  # MICROSERVICES
+  # =========================
   ms-admin:
     build:
       context: .
       dockerfile: ms-admin/Dockerfile
+    container_name: ms-admin
     ports:
       - "8081:8081"
+    depends_on:
+      - mysql
+      - config-server
+      - eureka-server
     networks:
       - dawi-network
+
 
   ms-auth:
     build:
       context: .
       dockerfile: ms-auth/Dockerfile
+    container_name: ms-auth
     ports:
       - "8082:8082"
+    depends_on:
+      - mysql
+      - rabbitmq
+      - config-server
+      - eureka-server
     networks:
       - dawi-network
+
 
   ms-clinica:
     build:
-      context: ./ms-clinica
+      context: .
+      dockerfile: ms-clinica/Dockerfile
+    container_name: ms-clinica
     ports:
       - "8083:8083"
+    depends_on:
+      - mysql
+      - config-server
+      - eureka-server
     networks:
       - dawi-network
+
 
   ms-historial:
     build:
-      context: ./ms-historial
+      context: .
+      dockerfile: ms-historial/Dockerfile
+    container_name: ms-historial
     ports:
       - "8084:8084"
+    depends_on:
+      - mysql
+      - rabbitmq
+      - config-server
+      - eureka-server
     networks:
       - dawi-network
+
 
   ms-reportes:
     build:
-      context: ./ms-reportes
+      context: .
+      dockerfile: ms-reportes/Dockerfile
+    container_name: ms-reportes
     ports:
       - "8085:8085"
+    depends_on:
+      - mysql
+      - config-server
+      - eureka-server
     networks:
       - dawi-network
 
 
+  # =========================
+  # API GATEWAY (AL FINAL)
+  # =========================
+  api-gateway:
+    build:
+      context: .
+      dockerfile: api-gateway/Dockerfile
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - config-server
+      - eureka-server
+      - ms-admin
+      - ms-auth
+      - ms-clinica
+      - ms-historial
+      - ms-reportes
+    networks:
+      - dawi-network
+
+
+# =========================
+# NETWORK
+# =========================
 networks:
   dawi-network:
     driver: bridge

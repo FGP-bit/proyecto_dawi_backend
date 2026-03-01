@@ -1,9 +1,18 @@
 FROM maven:3.9.6-eclipse-temurin-17 AS build
-WORKDIR /app
-COPY .. .
+
+WORKDIR /build
+
+COPY . .
+
 RUN mvn clean package -DskipTests -pl config-server -am
 
+
 FROM eclipse-temurin:17-jdk-alpine
+
 WORKDIR /app
-COPY --from=build /app/config-server/target/*.jar app.jar
+
+COPY --from=build /build/config-server/target/*.jar app.jar
+
+EXPOSE 8888
+
 ENTRYPOINT ["java","-jar","app.jar"]

@@ -2,10 +2,10 @@
 
 echo "⏳ Waiting for MySQL..."
 
-until nc -z mysql 3306; do
-  echo "MySQL not ready yet..."
+while ! nc -z mysql 3306; do
   sleep 2
 done
 
-echo "✅ MySQL ready!"
-exec java -jar /app/app.jar
+echo "✅ MySQL is ready!"
+
+java -jar app.jar
